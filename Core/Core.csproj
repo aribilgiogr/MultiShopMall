@@ -10,9 +10,13 @@
     <Folder Include="Abstracts\Bases\" />
     <Folder Include="Abstracts\IRepositories\" />
     <Folder Include="Abstracts\IServices\" />
-    <Folder Include="Concretes\Entities\" />
     <Folder Include="Concretes\DTOs\" />
-    <Folder Include="Concretes\Enums\" />
+    <Folder Include="Concretes\Entities\Sales\" />
+    <Folder Include="Concretes\Entities\Showroom\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.19" />
   </ItemGroup>
 
   <ItemGroup>
