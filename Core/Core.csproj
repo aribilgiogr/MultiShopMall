@@ -7,12 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Abstracts\Bases\" />
     <Folder Include="Abstracts\IRepositories\" />
     <Folder Include="Abstracts\IServices\" />
     <Folder Include="Concretes\DTOs\" />
-    <Folder Include="Concretes\Entities\Sales\" />
-    <Folder Include="Concretes\Entities\Showroom\" />
   </ItemGroup>
 
   <ItemGroup>
