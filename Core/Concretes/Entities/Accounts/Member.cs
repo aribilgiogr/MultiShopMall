@@ -12,5 +12,7 @@ namespace Core.Concretes.Entities.Accounts
         public string? ProfilePicture { get; set; }
         public DateTime? DateOfBirth { get; set; } = null;
         public Gender Sex { get; set; } = Gender.Unknown;
+        public string? ActivationCode { get; set; }
+        public DateTime? CodeExpireDate { get; set; }
     }
 }
