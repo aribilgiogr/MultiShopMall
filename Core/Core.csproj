@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Abstracts\IServices\" />
     <Folder Include="Concretes\DTOs\" />
   </ItemGroup>
 
