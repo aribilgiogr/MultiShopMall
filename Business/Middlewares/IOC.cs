@@ -17,12 +17,12 @@ namespace Business.Middlewares
         public static IServiceCollection AddDataConnections(this IServiceCollection services, IConfiguration configuration)
         {
             // Veritabanı için sqlite kullanarak Context yapısını diğer hismetlerin kullanabilmesi için en üste ekleriyoruz. Ayrıca bu satır sayesinde projye sen bir veritabanı kullanıyorsun demiş oluyoruz.
-            services.AddDbContext<MallContext>(options => options.UseSqlite(configuration.GetConnectionString("SqliteConnection")));
+            services.AddDbContext<MallContext>(options => options.UseSqlite(configuration.GetConnectionString("SqliteConnection"), b => b.MigrationsAssembly("UI.Web")));
 
             return services;
         }
 
-        public static IServiceCollection AddAccounts(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddAccounts(this IServiceCollection services)
         {
             // Sıradaki servisimiz Identity için gerekli satır.
             services.AddIdentity<Member, MemberRole>() // Identity sistemini Member ve MemberRole sınıfları ile yapılandırır. Bu, kullanıcı ve rol yönetimi için gerekli olan temel işlevselliği sağlar.
@@ -31,7 +31,7 @@ namespace Business.Middlewares
             return services;
         }
 
-        public static IServiceCollection AddMallServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddMallServices(this IServiceCollection services)
         {
             // Unit of Work Pattern için gerekli satır.
             // Scoped: Bir istek (request) süresince aynı nesne örneğini (instance) kullanır. Web uygulamalarında genellikle her HTTP isteği için bir örnek oluşturulur.
