@@ -1,13 +1,26 @@
 using Business.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.AddLanguages();
+
+builder.Services.AddControllersWithViews()
+                .AddViewLocalization()
+                .AddDataAnnotationsLocalization();
+
 // IOC sýnýfýndaki uzantýlarý kullanarak servisleri ekliyoruz.
 builder.Services.AddDataConnections(builder.Configuration);
 builder.Services.AddAccounts();
 builder.Services.AddMallServices();
 
+
+
 var app = builder.Build();
+var supportedCultures = new[] { "en", "tr" };
+app.UseRequestLocalization(new RequestLocalizationOptions().SetDefaultCulture("en")
+                                                           .AddSupportedCultures(supportedCultures)
+                                                           .AddSupportedUICultures(supportedCultures));
 
 // IsDevelopment metodu, uygulamanýn geliþtirme ortamýnda mý çalýþtýðýný kontrol eder. Geliþtirme ortamýnda hata sayfalarý ve diðer geliþtirme araçlarý etkinleþtirilir.
 if (!app.Environment.IsDevelopment())

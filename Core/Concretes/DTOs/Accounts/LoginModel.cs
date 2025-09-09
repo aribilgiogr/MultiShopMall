@@ -4,12 +4,13 @@ namespace Core.Concretes.DTOs.Accounts
 {
     public class LoginModel
     {
-        [Required]
+        [Required, Display(Name = "Username", Prompt = "EnterUsername")]
         public required string Username { get; set; }
 
-        [Required, DataType(DataType.Password)]
+        [Required, DataType(DataType.Password), Display(Name = "Password", Prompt = "EnterPassword")]
         public required string Password { get; set; }
 
+        [Display(Name = "RememberMe")]
         public bool RememberMe { get; set; }
     }
 

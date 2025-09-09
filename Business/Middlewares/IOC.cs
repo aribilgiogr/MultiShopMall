@@ -1,4 +1,5 @@
-﻿using Business.Services;
+﻿using Business.Resources;
+using Business.Services;
 using Core.Abstracts;
 using Core.Abstracts.IServices;
 using Core.Concretes.Entities.Accounts;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 
 namespace Business.Middlewares
 {
@@ -42,6 +44,12 @@ namespace Business.Middlewares
             services.AddScoped<IShowroomService, ShowroomService>();
             services.AddScoped<ISalesService, SalesService>();
 
+            return services;
+        }
+
+        public static IServiceCollection AddLanguages(this IServiceCollection services)
+        {
+            services.AddScoped<IStringLocalizer<SharedResource>, StringLocalizer<SharedResource>>();
             return services;
         }
     }

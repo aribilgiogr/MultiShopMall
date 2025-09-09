@@ -1,0 +1,9 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (User.Identity != null && User.Identity.IsAuthenticated)
+{
+    <h1>@User.Identity.Name kullanıcısın profili!</h1>
+}
