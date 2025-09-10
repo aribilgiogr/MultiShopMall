@@ -118,12 +118,21 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="EnterPassword" xml:space="preserve">
-    <value>Şifrenizi girin</value>
+    <value>Parolanızı girin</value>
   </data>
   <data name="EnterUsername" xml:space="preserve">
     <value>Kullanıcı adınızı girin</value>
   </data>
+  <data name="LoginButton" xml:space="preserve">
+    <value>Giriş Yap</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Parola</value>
+  </data>
   <data name="RememberMe" xml:space="preserve">
     <value>Beni hatırla</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Kullanıcı Adı</value>
   </data>
 </root>

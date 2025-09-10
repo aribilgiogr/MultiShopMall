@@ -1,8 +1,8 @@
-﻿using Business.Resources;
-using Business.Services;
+﻿using Business.Services;
 using Core.Abstracts;
 using Core.Abstracts.IServices;
 using Core.Concretes.Entities.Accounts;
+using Core.Resources;
 using Data;
 using Data.Contexts;
 using Microsoft.AspNetCore.Identity;

@@ -1,4 +1,6 @@
 using Business.Middlewares;
+using Microsoft.AspNetCore.Mvc.Razor;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -6,7 +8,7 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 builder.Services.AddLanguages();
 
 builder.Services.AddControllersWithViews()
-                .AddViewLocalization()
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization();
 
 // IOC sýnýfýndaki uzantýlarý kullanarak servisleri ekliyoruz.
