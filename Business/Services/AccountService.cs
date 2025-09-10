@@ -26,6 +26,30 @@ namespace Business.Services
             return ResponseModel<string>.Success(reset_code);
         }
 
+        public async Task<MemberModel?> GetMemberModel(string username)
+        {
+            var user = await unitOfWork.UserManager.FindByNameAsync(username);
+
+            if (user == null) return null;
+
+            var roles = await unitOfWork.UserManager.GetRolesAsync(user);
+
+            return new MemberModel
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                Firstname = user.Firstname,
+                Middlename = user.Middlename,
+                Lastname = user.Lastname,
+                Role = roles.FirstOrDefault() ?? "",
+                Bio = user.Bio,
+                DateOfBirth = user.DateOfBirth,
+                EmailConfirmed = user.EmailConfirmed,
+                ProfilePicture = user.ProfilePicture,
+                Sex = user.Sex
+            };
+        }
+
         public async Task<ResponseModel<LoginModel>> LoginAsync(LoginModel model)
         {
             var user = await unitOfWork.UserManager.FindByNameAsync(model.Username);

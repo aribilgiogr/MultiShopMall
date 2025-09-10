@@ -5,6 +5,7 @@ namespace Core.Abstracts.IServices
 {
     public interface IAccountService
     {
+        Task<MemberModel?> GetMemberModel(string username);
         Task<ResponseModel<LoginModel>> LoginAsync(LoginModel model);
         Task LogoutAsync();
         Task<ResponseModel<string>> RegisterAsync(RegisterModel model);

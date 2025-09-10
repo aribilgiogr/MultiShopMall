@@ -2,6 +2,7 @@
 using Core.Concretes.DTOs.Accounts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using Utilities.Constants;
 
 namespace UI.Web.Controllers
@@ -10,9 +11,9 @@ namespace UI.Web.Controllers
     {
         // Profil veya ayarlar sayfası gibi bir sayfa için örnek action
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await service.GetMemberModel(User.Identity.Name));
         }
 
         public IActionResult Login()
@@ -22,7 +23,7 @@ namespace UI.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginModel model, string returnUrl)
+        public async Task<IActionResult> Login(LoginModel model, string returnUrl = "/")
         {
             if (!ModelState.IsValid)
             {
@@ -34,10 +35,11 @@ namespace UI.Web.Controllers
             if (result.Tag != ResponseTag.INFO)
             {
                 ModelState.AddModelError(string.Empty, result.Message);
+                ModelState.AddModelError(string.Empty, result.Detail);
                 return View(model);
             }
 
-            return RedirectToAction("Index", "Home");
+            return Redirect(returnUrl);
         }
 
         public IActionResult Register()
@@ -58,6 +60,7 @@ namespace UI.Web.Controllers
             if (result.Tag != ResponseTag.INFO)
             {
                 ModelState.AddModelError(string.Empty, result.Message);
+                ModelState.AddModelError(string.Empty, result.Detail);
                 return View(model);
             }
 

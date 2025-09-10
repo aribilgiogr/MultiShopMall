@@ -1,0 +1,33 @@
+﻿@using Core.Abstracts.IServices
+@inject IAccountService accountService
+@{
+    MemberModel? member = null;
+    if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        member = await accountService.GetMemberModel(User.Identity.Name);
+    }
+}
+<nav class="nav">
+    @if (member != null)
+    {
+        <a class="nav-link" asp-action="index" asp-controller="account" title="@($"{member.Firstname} {member.Lastname}")">
+            @if (string.IsNullOrEmpty(member.ProfilePicture))
+            {
+                <i class="fa-regular fa-circle-user fa-2x"></i>
+            }
+            else
+            {
+                <img src="@member.ProfilePicture" alt="@($"{member.Firstname} {member.Lastname}")" class="rounded-circle border" style="width:48px; height: 48px" />
+            }
+        </a>
+
+        <form asp-action="logout" asp-controller="account" method="post">
+            <button class="nav-link" type="submit">Logout</button>
+        </form>
+    }
+    else
+    {
+        <a class="nav-link" asp-action="login" asp-controller="account">Login</a>
+        <a class="nav-link" asp-action="register" asp-controller="account">Register</a>
+    }
+</nav>
