@@ -117,17 +117,35 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Email" xml:space="preserve">
+    <value>E-Posta Adresi</value>
+  </data>
+  <data name="EnterEmail" xml:space="preserve">
+    <value>E-posta adresinizi girin</value>
+  </data>
   <data name="EnterPassword" xml:space="preserve">
     <value>Parolanızı girin</value>
   </data>
+  <data name="EnterPasswordConfirm" xml:space="preserve">
+    <value>Parolanızı onaylayın</value>
+  </data>
   <data name="EnterUsername" xml:space="preserve">
     <value>Kullanıcı adınızı girin</value>
+  </data>
+  <data name="Firstname" xml:space="preserve">
+    <value>İsim</value>
+  </data>
+  <data name="Lastname" xml:space="preserve">
+    <value>Soyisim</value>
   </data>
   <data name="LoginButton" xml:space="preserve">
     <value>Giriş Yap</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Parola</value>
+  </data>
+  <data name="PasswordConfirm" xml:space="preserve">
+    <value>Parola Onayla</value>
   </data>
   <data name="RememberMe" xml:space="preserve">
     <value>Beni hatırla</value>

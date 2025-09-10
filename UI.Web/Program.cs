@@ -1,5 +1,8 @@
 using Business.Middlewares;
-using Microsoft.AspNetCore.Mvc.Razor;
+using Core.Resources;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
+using Utilities.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +11,17 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 builder.Services.AddLanguages();
 
 builder.Services.AddControllersWithViews()
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-                .AddDataAnnotationsLocalization();
+                .AddViewLocalization()
+                .AddDataAnnotationsLocalization(opt =>
+                {
+                    opt.DataAnnotationLocalizerProvider = (type, factory) =>
+                    {
+                        var localizer = factory.Create(typeof(SharedResource));
+                        LocalizerHelper<SharedResource>.Init(factory);
+                        return localizer;
+                    };
+                }
+    );
 
 // IOC sýnýfýndaki uzantýlarý kullanarak servisleri ekliyoruz.
 builder.Services.AddDataConnections(builder.Configuration);
@@ -17,12 +29,20 @@ builder.Services.AddAccounts();
 builder.Services.AddMallServices();
 
 
-
 var app = builder.Build();
 var supportedCultures = new[] { "en", "tr" };
-app.UseRequestLocalization(new RequestLocalizationOptions().SetDefaultCulture("en")
-                                                           .AddSupportedCultures(supportedCultures)
-                                                           .AddSupportedUICultures(supportedCultures));
+
+var localizationOptions = new RequestLocalizationOptions()
+{
+    DefaultRequestCulture = new RequestCulture("tr"),
+    SupportedCultures = [.. supportedCultures.Select(c => new CultureInfo(c))],
+    SupportedUICultures = [.. supportedCultures.Select(c => new CultureInfo(c))]
+};
+
+localizationOptions.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
+localizationOptions.RequestCultureProviders.Insert(1, new CookieRequestCultureProvider());
+
+app.UseRequestLocalization(localizationOptions);
 
 // IsDevelopment metodu, uygulamanýn geliþtirme ortamýnda mý çalýþtýðýný kontrol eder. Geliþtirme ortamýnda hata sayfalarý ve diðer geliþtirme araçlarý etkinleþtirilir.
 if (!app.Environment.IsDevelopment())
