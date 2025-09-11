@@ -85,5 +85,23 @@ namespace UI.Web.Controllers
             await service.LogoutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+
+        public IActionResult VendorRegister()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> VendorRegister(VendorModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await service.CreateVendorAccountAsync(model);
+                return RedirectToAction("index");
+            }
+            return View(model);
+        }
     }
 }

@@ -2,6 +2,7 @@
 using Core.Abstracts.IServices;
 using Core.Concretes.DTOs.Accounts;
 using Core.Concretes.Entities.Accounts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Utilities.Models;
 
@@ -9,6 +10,26 @@ namespace Business.Services
 {
     public class AccountService(IUnitOfWork unitOfWork) : IAccountService
     {
+        public async Task CreateVendorAccountAsync(VendorModel model)
+        {
+            var user = await unitOfWork.UserManager.FindByNameAsync(model.Username);
+            if (user != null)
+            {
+                await unitOfWork.UserManager.AddToRoleAsync(user, "Vendor");
+
+                var vendor = new Vendor
+                {
+                    StoreName = model.StoreName,
+                    MemberId = user.Id,
+                    Banner = model.Banner,
+                    Logo = model.Logo,
+                    Description = model.Description
+                };
+                await unitOfWork.VendorRepository.CreateAsync(vendor);
+                await unitOfWork.CommitAsync();
+            }
+        }
+
         public async Task<ResponseModel<string>> ForgotPasswordAsync(string email)
         {
             var user = await unitOfWork.UserManager.FindByEmailAsync(email);
@@ -52,6 +73,7 @@ namespace Business.Services
 
         public async Task<ResponseModel<LoginModel>> LoginAsync(LoginModel model)
         {
+            await CreateRolesAsync();
             var user = await unitOfWork.UserManager.FindByNameAsync(model.Username);
             if (user == null) return ResponseModel<LoginModel>.Error("Kullanıcı adı bulunamadı!");
 
@@ -73,6 +95,7 @@ namespace Business.Services
 
         public async Task<ResponseModel<string>> RegisterAsync(RegisterModel model)
         {
+            await CreateRolesAsync();
             var user = new Member
             {
                 Firstname = model.Firstname,
@@ -88,6 +111,8 @@ namespace Business.Services
                 user.ActivationCode = code;
                 user.CodeExpireDate = DateTime.UtcNow.AddMinutes(60);
                 await unitOfWork.UserManager.UpdateAsync(user);
+
+                await unitOfWork.UserManager.AddToRoleAsync(user, "Customer");
 
                 return ResponseModel<string>.Success(code, "Kayıt başarılı.");
             }
@@ -116,6 +141,18 @@ namespace Business.Services
             user.CodeExpireDate = null;
             await unitOfWork.UserManager.UpdateAsync(user);
             return ResponseModel<string>.Success("", "Kayıt başarılı.");
+        }
+
+        private async Task CreateRolesAsync()
+        {
+            if (!await unitOfWork.RoleManager.RoleExistsAsync("Administrator"))
+                await unitOfWork.RoleManager.CreateAsync(new MemberRole { Name = "Administrator" });
+
+            if (!await unitOfWork.RoleManager.RoleExistsAsync("Vendor"))
+                await unitOfWork.RoleManager.CreateAsync(new MemberRole { Name = "Vendor" });
+
+            if (!await unitOfWork.RoleManager.RoleExistsAsync("Customer"))
+                await unitOfWork.RoleManager.CreateAsync(new MemberRole { Name = "Customer" });
         }
     }
 }

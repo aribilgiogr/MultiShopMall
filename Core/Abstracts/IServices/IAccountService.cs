@@ -11,5 +11,6 @@ namespace Core.Abstracts.IServices
         Task<ResponseModel<string>> RegisterAsync(RegisterModel model);
         Task<ResponseModel<string>> ForgotPasswordAsync(string email);
         Task<ResponseModel<string>> ResetPasswordAsync(string code, string oldPassword, string newPassword);
+        Task CreateVendorAccountAsync(VendorModel model);
     }
 }
