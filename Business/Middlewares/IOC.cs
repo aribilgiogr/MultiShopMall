@@ -43,6 +43,7 @@ namespace Business.Middlewares
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IShowroomService, ShowroomService>();
             services.AddScoped<ISalesService, SalesService>();
+            services.AddScoped<IWarehouseService, WarehouseService>();
 
             return services;
         }

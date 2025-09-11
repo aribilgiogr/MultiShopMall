@@ -1,4 +1,5 @@
 ﻿using Core.Abstracts.Bases;
+using Core.Concretes.Entities.Accounts;
 using Core.Concretes.Entities.Sales;
 
 namespace Core.Concretes.Entities.Showroom
@@ -20,5 +21,7 @@ namespace Core.Concretes.Entities.Showroom
         public virtual ICollection<ProductImage> Images { get; set; } = [];
         public virtual ICollection<CartItem> CartItems { get; set; } = [];
         public virtual ICollection<OrderItem> OrderItems { get; set; } = [];
+        public int VendorId { get; set; }
+        public virtual Vendor? Vendor { get; set; }
     }
 }
