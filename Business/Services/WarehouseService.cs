@@ -1,6 +1,7 @@
 ﻿using Core.Abstracts;
 using Core.Abstracts.IServices;
 using Core.Concretes.DTOs.Warehouse;
+using Core.Concretes.Entities.Showroom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,14 +17,16 @@ namespace Business.Services
             throw new NotImplementedException();
         }
 
-        public Task AddBrandAsync(string name, string? logo = null)
+        public async Task AddBrandAsync(string name, string? logo = null)
         {
-            throw new NotImplementedException();
+            await unitOfWork.BrandRepository.CreateAsync(new Brand { Name = name, Logo = logo });
+            await unitOfWork.CommitAsync();
         }
 
-        public Task AddCategoryAsync(string name)
+        public async Task AddCategoryAsync(string name)
         {
-            throw new NotImplementedException();
+            await unitOfWork.CategoryRepository.CreateAsync(new Category { Name = name });
+            await unitOfWork.CommitAsync();
         }
 
         public Task AddImagesToProductAsync(int productId, string[] images)
@@ -31,9 +34,10 @@ namespace Business.Services
             throw new NotImplementedException();
         }
 
-        public Task AddModelAsync(string name)
+        public async Task AddModelAsync(string name)
         {
-            throw new NotImplementedException();
+            await unitOfWork.ProductModelRepository.CreateAsync(new ProductModel { Name = name });
+            await unitOfWork.CommitAsync();
         }
 
         public Task AddSubCategoryAsync(string name, int parentId)
@@ -126,9 +130,16 @@ namespace Business.Services
             throw new NotImplementedException();
         }
 
-        public Task RemoveModelAsync(int id)
+        public async Task RemoveModelAsync(int id)
         {
-            throw new NotImplementedException();
+            var model = await unitOfWork.ProductModelRepository.ReadAsync(id);
+            if (model != null)
+            {
+                model.Deleted = true;
+                model.Active = false;
+                await unitOfWork.ProductModelRepository.UpdateAsync(model);
+                await unitOfWork.CommitAsync();
+            }
         }
 
         public Task RemoveSubCategoryAsync(int id)

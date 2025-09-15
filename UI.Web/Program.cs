@@ -30,6 +30,7 @@ builder.Services.AddMallServices();
 
 
 var app = builder.Build();
+
 var supportedCultures = new[] { "en", "tr" };
 
 var localizationOptions = new RequestLocalizationOptions()
@@ -59,6 +60,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
