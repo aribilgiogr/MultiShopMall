@@ -5,5 +5,8 @@ using Utilities.Generics;
 
 namespace Data.Repositories.Showroom
 {
-    public class ProductImageRepository(MallContext context) : Repository<ProductImage>(context), IProductImageRepository { }
+    public class ProductImageRepository(MallContext context) : Repository<ProductImage>(context), IProductImageRepository
+    {
+        public async Task CreateManyAsync(IEnumerable<ProductImage> images) => await _set.AddRangeAsync(images);
+    }
 }

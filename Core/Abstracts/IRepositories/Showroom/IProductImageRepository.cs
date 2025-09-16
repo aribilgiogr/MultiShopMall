@@ -3,5 +3,7 @@ using Utilities.Generics;
 
 namespace Core.Abstracts.IRepositories.Showroom
 {
-    public interface IProductImageRepository : IRepository<ProductImage> { }
+    public interface IProductImageRepository : IRepository<ProductImage> {
+        Task CreateManyAsync(IEnumerable<ProductImage> images);
+    }
 }

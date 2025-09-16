@@ -1,4 +1,5 @@
 ﻿using Core.Abstracts.Bases;
+using Core.Concretes.Entities.Sales;
 using Core.Concretes.Entities.Showroom;
 
 namespace Core.Concretes.Entities.Accounts
@@ -13,5 +14,6 @@ namespace Core.Concretes.Entities.Accounts
         public required string MemberId { get; set; }
         public virtual Member? Member { get; set; }
         public virtual ICollection<Product> Products { get; set; } = [];
+        public virtual ICollection<Order> Orders { get; set; } = [];
     }
 }

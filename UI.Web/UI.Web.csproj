@@ -13,7 +13,6 @@
     <Folder Include="Areas\Customers\Views\" />
     <Folder Include="Areas\VendorPanel\Data\" />
     <Folder Include="Areas\VendorPanel\Models\" />
-    <Folder Include="Areas\VendorPanel\Views\" />
     <Folder Include="wwwroot\assets\images\" />
     <Folder Include="wwwroot\assets\vendors\" />
     <Folder Include="wwwroot\uploads\" />

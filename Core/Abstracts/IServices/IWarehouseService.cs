@@ -10,7 +10,7 @@ namespace Core.Abstracts.IServices
     public interface IWarehouseService
     {
         #region Vendor Section
-        Task<IEnumerable<ProductListItem>> GetProductsAsync();
+        Task<IEnumerable<ProductListItem>> GetProductsAsync(int vendorId);
         Task CreateProductAsync(CreateProduct model);
         Task DeleteProductAsync(int id);
         Task UpdateProductAsync(EditProduct model);

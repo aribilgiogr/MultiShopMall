@@ -45,9 +45,37 @@ namespace Business.Services
             throw new NotImplementedException();
         }
 
-        public Task CreateProductAsync(CreateProduct model)
+        public async Task CreateProductAsync(CreateProduct model)
         {
-            throw new NotImplementedException();
+            var product = new Product
+            {
+                Name = model.Name,
+                Thumbnail = model.Thumbnail,
+                Description = model.Description,
+                BrandId = model.BrandId,
+                SubCategoryId = model.SubCategoryId,
+                Price = model.Price,
+                Discount = model.Discount,
+                VendorId = model.VendorId,
+                ProductModelId = model.ProductModelId
+            };
+
+            // Bu işlemden sonra product nesnesindeki Id alanı güncellenir, bu sayede aşağıdaki nesnelerde o alanı kullanabilir.
+            await unitOfWork.ProductRepository.CreateAsync(product);
+
+            if (model.Images.Any())
+            {
+                var images = from i in model.Images select new ProductImage { ImagePath = i, ProductId = product.Id };
+                await unitOfWork.ProductImageRepository.CreateManyAsync(images);
+            }
+
+            if (model.Attributes.Any())
+            {
+                var attributes = model.Attributes.Select(a => new ProductAttribute { Key = a.Key, Value = a.Value, ProductId = product.Id });
+                await unitOfWork.ProductAttributeRepository.CreateManyAsync(attributes);
+            }
+
+            await unitOfWork.CommitAsync();
         }
 
         public Task DeleteProductAsync(int id)
@@ -94,9 +122,22 @@ namespace Business.Services
             return models.Select(m => new ModelListItem { Id = m.Id, Name = m.Name });
         }
 
-        public Task<IEnumerable<ProductListItem>> GetProductsAsync()
+        public async Task<IEnumerable<ProductListItem>> GetProductsAsync(int vendorId)
         {
-            throw new NotImplementedException();
+            var products = await unitOfWork.ProductRepository.ReadAsync(x => x.VendorId == vendorId, "SubCategory.Category", "Brand", "ProductModel", "Attributes", "Images");
+            return from p in products
+                   select new ProductListItem
+                   {
+                       Id = p.Id,
+                       Name = p.Name,
+                       Price = p.Price,
+                       Discount = p.Discount,
+                       Thumbnail = p.Thumbnail,
+                       BrandName = p.Brand?.Name ?? "",
+                       CategoryName = p.SubCategory?.Category?.Name ?? "",
+                       ModelName = p.ProductModel?.Name ?? "",
+                       SubCategoryName = p.SubCategory?.Name ?? ""
+                   };
         }
 
         public async Task<IEnumerable<SubCategoryListItem>> GetSubCategoriesAsync()

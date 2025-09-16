@@ -5,5 +5,8 @@ using Utilities.Generics;
 
 namespace Data.Repositories.Showroom
 {
-    public class ProductAttributeRepository(MallContext context) : Repository<ProductAttribute>(context), IProductAttributeRepository { }
+    public class ProductAttributeRepository(MallContext context) : Repository<ProductAttribute>(context), IProductAttributeRepository
+    {
+        public async Task CreateManyAsync(IEnumerable<ProductAttribute> attributes) => await _set.AddRangeAsync(attributes);
+    }
 }

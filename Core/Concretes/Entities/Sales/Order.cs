@@ -12,5 +12,6 @@ namespace Core.Concretes.Entities.Sales
         public decimal TotalDiscount { get; set; }
         public int ItemCount { get; set; }
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
+        public virtual ICollection<Vendor> Vendors { get; set; } = [];
     }
 }
