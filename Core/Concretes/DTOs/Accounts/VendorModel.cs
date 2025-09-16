@@ -8,6 +8,7 @@ namespace Core.Concretes.DTOs.Accounts
 {
     public class VendorModel
     {
+        public int Id { get; set; }
         public required string StoreName { get; set; }
         public string? Description { get; set; }
         public string? Logo { get; set; }

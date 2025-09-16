@@ -1,6 +1,8 @@
 ﻿using Core.Abstracts;
 using Core.Abstracts.IServices;
+using Core.Concretes.DTOs.Accounts;
 using Core.Concretes.DTOs.Warehouse;
+using Core.Concretes.Entities.Accounts;
 using Core.Concretes.Entities.Showroom;
 using System;
 using System.Collections.Generic;
@@ -114,6 +116,28 @@ namespace Business.Services
         {
             var categories = await unitOfWork.CategoryRepository.ReadAsync(x => x.Active && !x.Deleted);
             return from c in categories select new CategoryListItem { Id = c.Id, Name = c.Name };
+        }
+
+        public async Task<VendorModel?> GetCurrentVendor(string username)
+        {
+            var user = await unitOfWork.UserManager.FindByNameAsync(username);
+            if (user != null)
+            {
+                var vendor = await unitOfWork.VendorRepository.FirstAsync(x => x.MemberId == user.Id);
+                if (vendor != null)
+                {
+                    return new VendorModel
+                    {
+                        Username = username,
+                        StoreName = vendor.StoreName,
+                        Id = vendor.Id,
+                        Banner = vendor.Banner,
+                        Description = vendor.Description,
+                        Logo = vendor.Logo
+                    };
+                }
+            }
+            return null;
         }
 
         public async Task<IEnumerable<ModelListItem>> GetModelsAsync()

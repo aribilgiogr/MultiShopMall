@@ -1,15 +1,12 @@
-﻿using Core.Concretes.DTOs.Warehouse;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Core.Concretes.DTOs.Accounts;
+using Core.Concretes.DTOs.Warehouse;
 
 namespace Core.Abstracts.IServices
 {
     public interface IWarehouseService
     {
         #region Vendor Section
+        Task<VendorModel?> GetCurrentVendor(string username);
         Task<IEnumerable<ProductListItem>> GetProductsAsync(int vendorId);
         Task CreateProductAsync(CreateProduct model);
         Task DeleteProductAsync(int id);
