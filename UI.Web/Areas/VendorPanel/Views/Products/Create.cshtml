@@ -59,7 +59,9 @@
                 <input asp-for="Thumbnail" class="form-control" onchange="addFileInput(this)" />
                 <span asp-validation-for="Thumbnail" class="text-danger"></span>
             </div>
+            <div id="attrInputs"></div>
             <div class="form-group">
+                <button type="button" class="btn btn-secondary" onclick="addAttributeInput()">Add Attribute</button>
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -86,6 +88,19 @@
             }
 
             document.getElementById("fileInputs").appendChild(newInput)
+        }
+
+        let attrIndex = 0;
+        const addAttributeInput = () => {
+            const div = document.createElement("div")
+            div.classList.add('input-group')
+            div.innerHTML = `
+                <span class="input-group-text">Key:</span>
+                <input type="text" class="form-control" name="Attributes[${attrIndex}].Key">
+                <span class="input-group-text">Value:</span>
+                <input type="text" class="form-control" name="Attributes[${attrIndex}].Value">`
+            document.getElementById('attrInputs').appendChild(div)
+            attrIndex++
         }
     </script>
 }

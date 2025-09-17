@@ -44,9 +44,10 @@ namespace UI.Web.Areas.VendorPanel.Controllers
 
 
         // GET: ProductsController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            var product = await service.GetProductAsync(id);
+            return View(product);
         }
 
         // GET: ProductsController/Create
@@ -91,6 +92,24 @@ namespace UI.Web.Areas.VendorPanel.Controllers
 
                     if (!string.IsNullOrEmpty(thumbnailPath))
                     {
+                        var images = new List<string>();
+                        foreach (var img in model.Images)
+                        {
+                            if (img.Length > 0)
+                            {
+                                var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "products", "vendor_" + vendorId);
+                                Directory.CreateDirectory(uploadsDir);
+
+                                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(img.FileName)}";
+                                var filePath = Path.Combine(uploadsDir, fileName);
+                                using (var stream = new FileStream(filePath, FileMode.Create))
+                                {
+                                    await img.CopyToAsync(stream);
+                                }
+
+                                images.Add($"/uploads/products/vendor_{vendorId}/{fileName}");
+                            }
+                        }
                         var newProduct = new CreateProduct
                         {
                             Name = model.Name,
@@ -101,7 +120,9 @@ namespace UI.Web.Areas.VendorPanel.Controllers
                             ProductModelId = model.ProductModelId,
                             Discount = model.Discount,
                             VendorId = (int)vendorId,
-                            Thumbnail = thumbnailPath
+                            Thumbnail = thumbnailPath,
+                            Images = images,
+                            Attributes = model.Attributes,
                         };
                         await service.CreateProductAsync(newProduct);
 

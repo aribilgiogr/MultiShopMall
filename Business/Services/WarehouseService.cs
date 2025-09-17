@@ -62,8 +62,10 @@ namespace Business.Services
                 ProductModelId = model.ProductModelId
             };
 
-            // Bu işlemden sonra product nesnesindeki Id alanı güncellenir, bu sayede aşağıdaki nesnelerde o alanı kullanabilir.
+
             await unitOfWork.ProductRepository.CreateAsync(product);
+            // Bu işlemden sonra product nesnesindeki Id alanı güncellenir, bu sayede aşağıdaki nesnelerde o alanı kullanabilir.
+            await unitOfWork.CommitAsync();
 
             if (model.Images.Any())
             {
@@ -144,6 +146,32 @@ namespace Business.Services
         {
             var models = await unitOfWork.ProductModelRepository.ReadAsync(x => x.Active && !x.Deleted);
             return models.Select(m => new ModelListItem { Id = m.Id, Name = m.Name });
+        }
+
+        public async Task<ProductDetail> GetProductAsync(int productId)
+        {
+            var p = await unitOfWork.ProductRepository.ReadAsync(productId);
+            if (p != null)
+            {
+                var detail = new ProductDetail
+                {
+                    Name = p.Name,
+                    Thumbnail = p.Thumbnail,
+                    Description = p.Description,
+                    BrandId = p.BrandId,
+                    Discount = p.Discount,
+                    Price = p.Price,
+                    ProductModelId = p.ProductModelId,
+                    SubCategoryId = p.SubCategoryId,
+                };
+                var images = await unitOfWork.ProductImageRepository.ReadAsync(x => x.ProductId == p.Id);
+                var attributes = await unitOfWork.ProductAttributeRepository.ReadAsync(x => x.ProductId == p.Id);
+
+                detail.Images = images.Select(x => x.ImagePath);
+                detail.Attributes = attributes.Select(x => new KeyValuePair<string, string>(x.Key, x.Value)).ToDictionary();
+                return detail;
+            }
+            throw new Exception();
         }
 
         public async Task<IEnumerable<ProductListItem>> GetProductsAsync(int vendorId)

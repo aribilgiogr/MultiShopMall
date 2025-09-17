@@ -8,6 +8,7 @@ namespace Core.Abstracts.IServices
         #region Vendor Section
         Task<VendorModel?> GetCurrentVendor(string username);
         Task<IEnumerable<ProductListItem>> GetProductsAsync(int vendorId);
+        Task<ProductDetail> GetProductAsync(int productId);
         Task CreateProductAsync(CreateProduct model);
         Task DeleteProductAsync(int id);
         Task UpdateProductAsync(EditProduct model);
