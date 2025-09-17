@@ -28,7 +28,7 @@ namespace UI.Web.Areas.VendorPanel.Models
         [Display(Name = "Product Thumbnail Image", Prompt = "Product Thumbnail Image"), Required, DataType(DataType.Upload)]
         public IFormFile Thumbnail { get; set; } = null!;
 
-        public IEnumerable<string> Images { get; set; } = [];
+        public IEnumerable<IFormFile> Images { get; set; } = [];
         public Dictionary<string, string> Attributes { get; set; } = [];
     }
 }
