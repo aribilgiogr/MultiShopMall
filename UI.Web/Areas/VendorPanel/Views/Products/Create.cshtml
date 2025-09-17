@@ -34,29 +34,22 @@
                 <span asp-validation-for="Discount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories">
-                    <option value="">-- Select Category --</option>
-                </select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="SubCategoryId" class="control-label"></label>
-                <select asp-for="SubCategoryId" class="form-control" asp-items="ViewBag.SubCategories">
+                <select asp-for="SubCategoryId" class="form-select" asp-items="ViewBag.SubCategories">
                     <option value="">-- Select Subcategory --</option>
                 </select>
                 <span asp-validation-for="SubCategoryId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="BrandId" class="control-label"></label>
-                <select asp-for="BrandId" class="form-control" asp-items="ViewBag.Brands">
+                <select asp-for="BrandId" class="form-select" asp-items="ViewBag.Brands">
                     <option value="">-- Select Brand --</option>
                 </select>
                 <span asp-validation-for="BrandId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ProductModelId" class="control-label"></label>
-                <select asp-for="ProductModelId" class="form-control" asp-items="ViewBag.ProductModels">
+                <select asp-for="ProductModelId" class="form-select" asp-items="ViewBag.ProductModels">
                     <option value="">-- Select Model --</option>
                 </select>
                 <span asp-validation-for="ProductModelId" class="text-danger"></span>

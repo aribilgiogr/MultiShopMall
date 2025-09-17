@@ -17,9 +17,6 @@ namespace UI.Web.Areas.VendorPanel.Models
         public decimal Discount { get; set; }
 
         [Display(Name = "Product Category", Prompt = "Product Category"), Required]
-        public int CategoryId { get; set; }
-
-        [Display(Name = "Product Subcategory", Prompt = "Product Subcategory"), Required]
         public int SubCategoryId { get; set; }
 
         [Display(Name = "Product Brand", Prompt = "Product Brand"), Required]

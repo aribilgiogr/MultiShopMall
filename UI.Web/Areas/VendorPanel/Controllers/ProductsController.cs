@@ -52,8 +52,7 @@ namespace UI.Web.Areas.VendorPanel.Controllers
         // GET: ProductsController/Create
         public async Task<ActionResult> Create()
         {
-            ViewBag.Categories = new SelectList(await service.GetCategoriesAsync(), "Id", "Name");
-            ViewBag.SubCategories = new SelectList(await service.GetSubCategoriesAsync(), "Id", "Name");
+            ViewBag.SubCategories = new SelectList(await service.GetSubCategoriesAsync(), "Id", "Name", null, "ParentCategory.Name");
             ViewBag.Brands = new SelectList(await service.GetBrandsAsync(), "Id", "Name");
             ViewBag.ProductModels = new SelectList(await service.GetModelsAsync(), "Id", "Name");
 
@@ -68,17 +67,46 @@ namespace UI.Web.Areas.VendorPanel.Controllers
             var vendorId = await getCurrentVendorId();
             if (vendorId != null)
             {
+                ViewBag.SubCategories = new SelectList(await service.GetSubCategoriesAsync(), "Id", "Name", model.SubCategoryId, "ParentCategory.Name");
+                ViewBag.Brands = new SelectList(await service.GetBrandsAsync(), "Id", "Name", model.BrandId);
+                ViewBag.ProductModels = new SelectList(await service.GetModelsAsync(), "Id", "Name", model.ProductModelId);
+
                 if (ModelState.IsValid)
                 {
-                    ViewBag.Categories = new SelectList(await service.GetCategoriesAsync(), "Id", "Name", model.CategoryId);
-                    ViewBag.SubCategories = new SelectList(await service.GetSubCategoriesAsync(), "Id", "Name", model.SubCategoryId);
-                    ViewBag.Brands = new SelectList(await service.GetBrandsAsync(), "Id", "Name", model.BrandId);
-                    ViewBag.ProductModels = new SelectList(await service.GetModelsAsync(), "Id", "Name", model.ProductModelId);
+                    string? thumbnailPath = null;
+                    if (model.Thumbnail.Length > 0)
+                    {
+                        var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "products", "vendor_" + vendorId);
+                        Directory.CreateDirectory(uploadsDir);
 
+                        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(model.Thumbnail.FileName)}";
+                        var filePath = Path.Combine(uploadsDir, fileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await model.Thumbnail.CopyToAsync(stream);
+                        }
 
+                        thumbnailPath = $"/uploads/products/vendor_{vendorId}/{fileName}";
+                    }
 
+                    if (!string.IsNullOrEmpty(thumbnailPath))
+                    {
+                        var newProduct = new CreateProduct
+                        {
+                            Name = model.Name,
+                            Description = model.Description,
+                            Price = model.Price,
+                            BrandId = model.BrandId,
+                            SubCategoryId = model.SubCategoryId,
+                            ProductModelId = model.ProductModelId,
+                            Discount = model.Discount,
+                            VendorId = (int)vendorId,
+                            Thumbnail = thumbnailPath
+                        };
+                        await service.CreateProductAsync(newProduct);
 
-                    return RedirectToAction("index");
+                        return RedirectToAction("index");
+                    }
                 }
                 return View(model);
             }
