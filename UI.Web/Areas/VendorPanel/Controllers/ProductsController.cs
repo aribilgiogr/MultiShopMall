@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
+using UI.Web.Areas.VendorPanel.Models;
 
 namespace UI.Web.Areas.VendorPanel.Controllers
 {
@@ -62,19 +63,23 @@ namespace UI.Web.Areas.VendorPanel.Controllers
         // POST: ProductsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(CreateProduct model, int CategoryId, IFormFile Thumbnail)
+        public async Task<ActionResult> Create(NewProductViewModel model)
         {
             var vendorId = await getCurrentVendorId();
             if (vendorId != null)
             {
-                ViewBag.Categories = new SelectList(await service.GetCategoriesAsync(), "Id", "Name", CategoryId);
-                ViewBag.SubCategories = new SelectList(await service.GetSubCategoriesAsync(), "Id", "Name", model.SubCategoryId);
-                ViewBag.Brands = new SelectList(await service.GetBrandsAsync(), "Id", "Name", model.BrandId);
-                ViewBag.ProductModels = new SelectList(await service.GetModelsAsync(), "Id", "Name", model.ProductModelId);
+                if (ModelState.IsValid)
+                {
+                    ViewBag.Categories = new SelectList(await service.GetCategoriesAsync(), "Id", "Name", model.CategoryId);
+                    ViewBag.SubCategories = new SelectList(await service.GetSubCategoriesAsync(), "Id", "Name", model.SubCategoryId);
+                    ViewBag.Brands = new SelectList(await service.GetBrandsAsync(), "Id", "Name", model.BrandId);
+                    ViewBag.ProductModels = new SelectList(await service.GetModelsAsync(), "Id", "Name", model.ProductModelId);
 
-                model.VendorId = (int)vendorId;
-                model.Thumbnail = "https://picsum.photos/250"; //Geçici bir bildirim, upload kodu gelince değişecek.
 
+
+
+                    return RedirectToAction("index");
+                }
                 return View(model);
             }
             return NotFound(); // 404 sayfasına yönlendirilir.
