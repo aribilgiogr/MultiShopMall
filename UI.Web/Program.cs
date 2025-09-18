@@ -13,6 +13,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AllowNullCollections = true;
     cfg.AllowNullDestinationValues = true;
     cfg.AddProfile<ShowroomProfile>();
+    cfg.AddProfile<SalesProfile>();
 });
 
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");

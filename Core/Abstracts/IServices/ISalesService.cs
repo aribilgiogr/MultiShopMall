@@ -2,6 +2,6 @@
 {
     public interface ISalesService
     {
-
+        Task<CurrentCart> GetCurrentCartAsync(string username);
     }
 }
