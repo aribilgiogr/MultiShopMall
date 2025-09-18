@@ -71,7 +71,7 @@
                             }
                             @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Customer"))
                             {
-                                <button class="btn btn-outline-dark btn-sm" data-pid="@item.Id">
+                                <button class="btn btn-outline-dark btn-sm" data-pid="@item.Id" onclick="addToCart(this)">
                                     <i class="fa-solid fa-cart-plus"></i>
                                 </button>
                             }
@@ -87,3 +87,18 @@
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        const addToCart = (p) =>{
+            console.log({username:'@User.Identity?.Name',productId:parseInt(p.dataset.pid)})
+            fetch('/addtocart',{method:"POST", headers:{'content-type':'application/json'}, body: JSON.stringify({username:'@User.Identity?.Name',productId:parseInt(p.dataset.pid)})})
+            .then(res=>{
+                if(!res.ok){
+                    throw new Error("Not Ok!")
+                }
+                location.reload()
+            })
+            .catch(err => console.error(err))
+        }
+    </script>
+}

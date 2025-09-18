@@ -1,9 +1,66 @@
-﻿using Core.Abstracts;
+﻿using AutoMapper;
+using Core.Abstracts;
 using Core.Abstracts.IServices;
+using Core.Concretes.DTOs.Sales;
+using Core.Concretes.Entities.Sales;
+using System.Threading.Tasks;
 
 namespace Business.Services
 {
-    public class SalesService(IUnitOfWork unitOfWork) : ISalesService
+    public class SalesService(IUnitOfWork unitOfWork, IMapper mapper) : ISalesService
     {
+        private async Task<Cart> getCart(string username)
+        {
+            var user = await unitOfWork.UserManager.FindByNameAsync(username);
+            if (user != null)
+            {
+                var customer = await unitOfWork.CustomerRepository.FirstAsync(x => x.MemberId == user.Id);
+                if (customer != null)
+                {
+                    var cart = await unitOfWork.CartRepository.FirstAsync(x => x.Active && !x.Deleted && x.CustomerId == customer.Id, "CartItems");
+                    if (cart == null)
+                    {
+                        cart = new Cart { CustomerId = customer.Id };
+                        await unitOfWork.CartRepository.CreateAsync(cart);
+                        await unitOfWork.CommitAsync();
+                    }
+                    return cart;
+                }
+            }
+            throw new KeyNotFoundException();
+        }
+
+        public async Task AddToCartAsync(string username, int productId, int qty = 1)
+        {
+            var cart = await getCart(username);
+            var item = new CartItem { CartId = cart.Id, ProductId = productId, Quantity = qty };
+            await unitOfWork.CartItemRepository.CreateAsync(item);
+            await unitOfWork.CommitAsync();
+        }
+
+        public async Task ChangeQuantityAsync(string username, int productId, int qty = 0)
+        {
+            var cart = await getCart(username);
+            var item = await unitOfWork.CartItemRepository.FirstAsync(x => x.ProductId == productId && x.CartId == cart.Id);
+            if (item != null)
+            {
+                item.Quantity += qty;
+                await unitOfWork.CartItemRepository.UpdateAsync(item);
+                await unitOfWork.CommitAsync();
+            }
+        }
+
+        public async Task<CurrentCart> GetCurrentCartAsync(string username) => mapper.Map<CurrentCart>(await getCart(username));
+
+        public async Task RemoveFromCartAsync(string username, int productId)
+        {
+            var cart = await getCart(username);
+            var item = await unitOfWork.CartItemRepository.FirstAsync(x => x.ProductId == productId && x.CartId == cart.Id);
+            if (item != null)
+            {
+                await unitOfWork.CartItemRepository.DeleteAsync(item);
+                await unitOfWork.CommitAsync();
+            }
+        }
     }
 }

@@ -1,9 +1,12 @@
 using Business.Middlewares;
+using Core.Abstracts.IServices;
 using Core.Concretes.MappingProfiles;
 using Core.Resources;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
+using UI.Web.Models;
 using Utilities.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -73,11 +76,10 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-      name: "areas",
-      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-    );
+// Endpoint API Route: Controller-Action veya RazorPage olmaksýzýn direk bir BL fonksiyona rota atamasý yapýlýr.
+app.MapPost("/addtocart", async (ISalesService service, [FromBody] AddToCartBody body) => await service.AddToCartAsync(body.Username, body.ProductId));
 
+app.MapControllerRoute("areas", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute("about", "about", new { controller = "Home", action = "About" });
 app.MapControllerRoute("contact", "contact", new { controller = "Home", action = "Contact" });
 app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");

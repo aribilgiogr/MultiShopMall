@@ -1,10 +1,21 @@
 ﻿@using Core.Abstracts.IServices
+@using Core.Concretes.DTOs.Sales
 @inject IAccountService accountService
+@inject ISalesService salesService
 @{
     MemberModel? member = null;
+    CurrentCart currentCart = null;
     if (User.Identity != null && User.Identity.IsAuthenticated)
     {
         member = await accountService.GetMemberModel(User.Identity.Name);
+        try
+        {
+            currentCart = await salesService.GetCurrentCartAsync(User.Identity.Name);
+        }
+        catch (Exception)
+        {
+
+        }
     }
 }
 <nav class="nav">
@@ -20,7 +31,16 @@
                 <img src="@member.ProfilePicture" alt="@($"{member.Firstname} {member.Lastname}")" class="rounded-circle border" style="width:48px; height: 48px" />
             }
         </a>
-
+        @if (currentCart != null)
+        {
+            <a class="nav-link position-relative">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    @currentCart.ItemCount
+                    <span class="visually-hidden">Shopping Cart Items</span>
+                </span>
+            </a>
+        }
         <form asp-action="logout" asp-controller="account" method="post">
             <button class="nav-link" type="submit">Logout</button>
         </form>

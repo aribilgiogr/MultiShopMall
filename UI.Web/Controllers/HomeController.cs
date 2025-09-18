@@ -1,6 +1,5 @@
 ﻿using Core.Abstracts.IServices;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using UI.Web.Models;
 
 namespace UI.Web.Controllers
