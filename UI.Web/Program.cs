@@ -1,10 +1,19 @@
 using Business.Middlewares;
+using Core.Concretes.MappingProfiles;
 using Core.Resources;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 using Utilities.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AllowNullCollections = true;
+    cfg.AllowNullDestinationValues = true;
+    cfg.AddProfile<ShowroomProfile>();
+});
 
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 

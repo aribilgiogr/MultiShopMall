@@ -1,7 +1,83 @@
-﻿
+﻿@model ProductListViewModel
 @{
     ViewData["Title"] = "Index";
+    var categoryNames = Model.Categories.Select(x => new KeyValuePair<int, string>(x.ParentCategory.Id, x.ParentCategory.Name)).Distinct();
 }
+<div class="row g-3">
+    <div class="col-md-3">
+        <h5>Categories</h5>
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+            @foreach (var c in categoryNames)
+            {
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#category-@c.Key" aria-expanded="false" aria-controls="category-@c.Key">
+                            <strong>@c.Value</strong>
+                        </button>
+                    </h2>
+                    <div id="category-@c.Key" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <ul class="list-group list-group-flush">
+                            @foreach (var sc in Model.Categories.Where(x => x.ParentCategory.Id == c.Key))
+                            {
+                                <li class="list-group-item">@sc.Name</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+        <h5>Brands</h5>
+        <ul class="list-group list-group-flush">
+            @foreach (var b in Model.Brands)
+            {
+                <li class="list-group-item">@b.Name</li>
+            }
+        </ul>
+        <hr />
+        <h5>Models</h5>
+        <ul class="list-group list-group-flush">
+            @foreach (var m in Model.ProductModels)
+            {
+                <li class="list-group-item">@m.Name</li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-9">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var item in Model.Products)
+            {
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="@item.Thumbnail" class="card-img-top" alt="@item.Name">
+                        <div class="card-body">
+                            <h6 class="text-danger">@item.BrandName</h6>
+                            <h5 class="card-title">@item.Name</h5>
+                            <h6 class="text-muted">
+                                @item.CategoryName / @item.SubCategoryName
+                            </h6>
+                            <hr />
+                            @if (item.Discount > 0)
+                            {
+                                <p>
+                                    <del class="text-danger">₺@item.Price.ToString("0.00")</del><br />
+                                    <strong>₺@((item.Price * (100 - item.Discount) / 100).ToString("0.00"))</strong>
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    <strong>₺@item.Price.ToString("0.00")</strong>
+                                </p>
+                            }
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-body-secondary">@item.ModelName</small>
+                        </div>
+                    </div>
+                </div>
+            }
 
-<h1>Index</h1>
+        </div>
+    </div>
+</div>
 

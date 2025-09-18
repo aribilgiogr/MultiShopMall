@@ -1,12 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Core.Abstracts.IServices;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using UI.Web.Models;
 
 namespace UI.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(IShowroomService service) : Controller
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var model = new ProductListViewModel()
+            {
+                Categories = await service.GetCategoriesAsync(),
+                Brands = await service.GetBrandsAsync(),
+                ProductModels = await service.GetProductModelsAsync(),
+                Products = await service.GetProductsAsync(),
+            };
+            return View(model);
         }
 
         public IActionResult About()
