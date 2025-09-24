@@ -79,6 +79,8 @@ app.UseAuthorization();
 // Endpoint API Route: Controller-Action veya RazorPage olmaksýzýn direk bir BL fonksiyona rota atamasý yapýlýr.
 app.MapPost("/addtocart", async (ISalesService service, [FromBody] AddToCartBody body) => await service.AddToCartAsync(body.Username, body.ProductId));
 
+app.MapPost("/changequantity", async (ISalesService service, [FromBody] ChangeQuantityBody body) => await service.ChangeQuantityAsync(body.Username, body.ProductId, body.Quantity));
+
 app.MapControllerRoute("areas", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute("about", "about", new { controller = "Home", action = "About" });
 app.MapControllerRoute("contact", "contact", new { controller = "Home", action = "Contact" });

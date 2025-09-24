@@ -15,6 +15,7 @@ namespace Core.Concretes.DTOs.Sales
     
     public class CurrentCartItem
     {
+        public int ProductId { get; set; }
         public int Quantity { get; set; } = 1;
         public string Name { get; set; } = null!;
         public decimal Price { get; set; }

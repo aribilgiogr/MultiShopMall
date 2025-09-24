@@ -54,8 +54,11 @@ namespace Business.Services
             if (item != null)
             {
                 item.Quantity += qty;
-                await unitOfWork.CartItemRepository.UpdateAsync(item);
-                await unitOfWork.CommitAsync();
+                if (item.Quantity > 0 && item.Quantity < 10)
+                {
+                    await unitOfWork.CartItemRepository.UpdateAsync(item);
+                    await unitOfWork.CommitAsync();
+                }
             }
         }
 
