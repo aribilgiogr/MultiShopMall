@@ -36,6 +36,8 @@ builder.Services.AddControllersWithViews()
                 }
     );
 
+builder.Services.AddHttpClient("payment", cfg => { cfg.BaseAddress = new Uri("https://localhost:7090/api/payments"); });
+
 // IOC sýnýfýndaki uzantýlarý kullanarak servisleri ekliyoruz.
 builder.Services.AddDataConnections(builder.Configuration);
 builder.Services.AddAccounts();

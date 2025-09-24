@@ -74,5 +74,40 @@ namespace Business.Services
                 await unitOfWork.CommitAsync();
             }
         }
+
+        public async Task<int> CheckOutAsync(string username)
+        {
+            var cart = await getCart(username);
+            var order = new Order
+            {
+                CustomerId = cart.CustomerId,
+                ItemCount = cart.CartItems.Count,
+                TotalDiscount = cart.CartItems.Sum(x => (x.Product.Price * x.Product.Discount / 100) * x.Quantity),
+                TotalDue = cart.CartItems.Sum(x => x.Product.Price * x.Quantity)
+            };
+
+            await unitOfWork.OrderRepository.CreateAsync(order);
+            await unitOfWork.CommitAsync();
+
+            var items = from x in cart.CartItems
+                        select new OrderItem
+                        {
+                            Discount = x.Product.Discount,
+                            ListPrice = x.Product.Price,
+                            ProductId = x.ProductId,
+                            OrderId = order.Id,
+                            Quantity = x.Quantity
+                        };
+
+            await unitOfWork.OrderItemRepository.CreateManyAsync(items);
+
+            cart.Active = false;
+
+            await unitOfWork.CartRepository.UpdateAsync(cart);
+
+            await unitOfWork.CommitAsync();
+
+            return order.Id;
+        }
     }
 }
