@@ -33,12 +33,14 @@
         </a>
         @if (currentCart != null)
         {
-            <a class="nav-link position-relative">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    @currentCart.ItemCount
-                    <span class="visually-hidden">Shopping Cart Items</span>
-                </span>
+            <a class="nav-link" asp-action="shoppingcart" asp-controller="home">
+                <div class="position-relative">
+                    <i class="fa-solid fa-cart-shopping fa-2x"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        @currentCart.ItemCount
+                        <span class="visually-hidden">Shopping Cart Items</span>
+                    </span>
+                </div>
             </a>
         }
         <form asp-action="logout" asp-controller="account" method="post">

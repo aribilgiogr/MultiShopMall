@@ -1,10 +1,12 @@
 ﻿using Core.Abstracts.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using UI.Web.Models;
 
 namespace UI.Web.Controllers
 {
-    public class HomeController(IShowroomService service) : Controller
+    public class HomeController(IShowroomService service, ISalesService salesService) : Controller
     {
         public async Task<IActionResult> Index()
         {
@@ -16,6 +18,13 @@ namespace UI.Web.Controllers
                 Products = await service.GetProductsAsync(),
             };
             return View(model);
+        }
+
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> ShoppingCart()
+        {
+            var model = await salesService.GetCurrentCartAsync(User.Identity.Name);
+            return View(model.CartItems);
         }
 
         public IActionResult About()

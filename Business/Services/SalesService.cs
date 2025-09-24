@@ -17,7 +17,7 @@ namespace Business.Services
                 var customer = await unitOfWork.CustomerRepository.FirstAsync(x => x.MemberId == user.Id);
                 if (customer != null)
                 {
-                    var cart = await unitOfWork.CartRepository.FirstAsync(x => x.Active && !x.Deleted && x.CustomerId == customer.Id, "CartItems");
+                    var cart = await unitOfWork.CartRepository.FirstAsync(x => x.Active && !x.Deleted && x.CustomerId == customer.Id, "CartItems.Product");
                     if (cart == null)
                     {
                         cart = new Cart { CustomerId = customer.Id };
@@ -33,8 +33,17 @@ namespace Business.Services
         public async Task AddToCartAsync(string username, int productId, int qty = 1)
         {
             var cart = await getCart(username);
-            var item = new CartItem { CartId = cart.Id, ProductId = productId, Quantity = qty };
-            await unitOfWork.CartItemRepository.CreateAsync(item);
+            var item = await unitOfWork.CartItemRepository.FirstAsync(x => x.CartId == cart.Id && x.ProductId == productId);
+            if (item == null)
+            {
+                item = new CartItem { CartId = cart.Id, ProductId = productId, Quantity = qty };
+                await unitOfWork.CartItemRepository.CreateAsync(item);
+            }
+            else
+            {
+                item.Quantity += qty;
+                await unitOfWork.CartItemRepository.UpdateAsync(item);
+            }
             await unitOfWork.CommitAsync();
         }
 
